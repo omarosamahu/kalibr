@@ -235,10 +235,11 @@ void exportRadialTangentialDistortionFunctions() {
   exportGenericDistortionFunctions<RadialTangentialDistortion>(rtDistortion);
 
   rtDistortion.def(
-      init<double, double, double, double>(
-          ("RadialTangentialDistortion(double k1, double k2, double p1, double p2)")));
+      init<double, double, double,double, double>(
+          ("RadialTangentialDistortion(double k1, double k2, double k3,double p1, double p2)")));
   rtDistortion.def("k1", &RadialTangentialDistortion::k1);
   rtDistortion.def("k2", &RadialTangentialDistortion::k2);
+  rtDistortion.def("k3", &RadialTangentialDistortion::k3);
   rtDistortion.def("p1", &RadialTangentialDistortion::p1);
   rtDistortion.def("p2", &RadialTangentialDistortion::p2);
   //rtDistortion.def("getLinesPack", &RadialTangentialDistortion::getLinesPack);

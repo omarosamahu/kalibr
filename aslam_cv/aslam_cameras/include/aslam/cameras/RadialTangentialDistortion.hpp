@@ -47,7 +47,7 @@ class RadialTangentialDistortion {
   RadialTangentialDistortion();
 
   /// \brief A constructor that initializes all values.
-  RadialTangentialDistortion(double k1, double k2, double p1, double p2);
+  RadialTangentialDistortion(double k1, double k2, double k3, double p1, double p2);
 
   RadialTangentialDistortion(const sm::PropertyTree & config);
 
@@ -139,6 +139,10 @@ class RadialTangentialDistortion {
   double k2() {
     return _k2;
   }
+  /// \brief the third radial distortion parameter
+  double k3() {
+    return _k3;
+  }
   /// \brief the first tangential distortion parameter
   double p1() {
     return _p1;
@@ -151,6 +155,7 @@ class RadialTangentialDistortion {
   void clear() {
     _k1 = 0.0;
     _k2 = 0.0;
+    _k3 = 0.0;
     _p1 = 0.0;
     _p2 = 0.0;
   }
@@ -172,6 +177,8 @@ class RadialTangentialDistortion {
   double _k1;
   /// \brief the second radial distortion parameter
   double _k2;
+  /// \brief the third radial distortion parameter
+  double _k3;
   /// \brief the first tangential distortion parameter
   double _p1;
   /// \brief the second tangential distortion parameter

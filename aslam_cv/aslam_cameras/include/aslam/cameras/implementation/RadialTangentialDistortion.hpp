@@ -13,12 +13,11 @@ void RadialTangentialDistortion::distort(
   y.derived().resize(2);
 
   double mx2_u, my2_u, mxy_u, rho2_u, rad_dist_u;
-
   mx2_u = y[0] * y[0];
   my2_u = y[1] * y[1];
   mxy_u = y[0] * y[1];
   rho2_u = mx2_u + my2_u;
-  rad_dist_u = _k1 * rho2_u + _k2 * rho2_u * rho2_u;
+  rad_dist_u = _k1 * rho2_u + _k2 * rho2_u * rho2_u + _k3 * rho2_u * rho2_u * rho2_u ; // Omar
   y[0] += y[0] * rad_dist_u + 2.0 * _p1 * mxy_u + _p2 * (rho2_u + 2.0 * mx2_u);
   y[1] += y[1] * rad_dist_u + 2.0 * _p2 * mxy_u + _p1 * (rho2_u + 2.0 * my2_u);
 
@@ -48,16 +47,17 @@ void RadialTangentialDistortion::distort(
   my2_u = y[1] * y[1];
   mxy_u = y[0] * y[1];
   rho2_u = mx2_u + my2_u;
+  // Omar
+  rad_dist_u = _k1 * rho2_u + _k2 * rho2_u * rho2_u + _k3 * rho2_u * rho2_u * rho2_u; // Omar
 
-  rad_dist_u = _k1 * rho2_u + _k2 * rho2_u * rho2_u;
+  J(0, 0) = 1 + rad_dist_u + _k1 * 2.0 * mx2_u + _k2 * rho2_u * 4 * mx2_u + _k3 * 6 * rho2_u * rho2_u * mx2_u 
+      + 2.0 * _p1 * y[1] + 6 * _p2 * y[0]; // Omar
 
-  J(0, 0) = 1 + rad_dist_u + _k1 * 2.0 * mx2_u + _k2 * rho2_u * 4 * mx2_u
-      + 2.0 * _p1 * y[1] + 6 * _p2 * y[0];
   J(1, 0) = _k1 * 2.0 * y[0] * y[1] + _k2 * 4 * rho2_u * y[0] * y[1]
       + _p1 * 2.0 * y[0] + 2.0 * _p2 * y[1];
   J(0, 1) = J(1, 0);
-  J(1, 1) = 1 + rad_dist_u + _k1 * 2.0 * my2_u + _k2 * rho2_u * 4 * my2_u
-      + 6 * _p1 * y[1] + 2.0 * _p2 * y[0];
+  J(1, 1) = 1 + rad_dist_u + _k1 * 2.0 * my2_u + _k2 * rho2_u * 4 * my2_u + _k3 * 6 * rho2_u * rho2_u * my2_u
+      + 6 * _p1 * y[1] + 2.0 * _p2 * y[0]; // Omar
 
   y[0] += y[0] * rad_dist_u + 2.0 * _p1 * mxy_u + _p2 * (rho2_u + 2.0 * mx2_u);
   y[1] += y[1] * rad_dist_u + 2.0 * _p2 * mxy_u + _p1 * (rho2_u + 2.0 * my2_u);
@@ -186,6 +186,7 @@ void RadialTangentialDistortion::save(Archive & ar,
                                       const unsigned int /* version */) const {
   ar << BOOST_SERIALIZATION_NVP(_k1);
   ar << BOOST_SERIALIZATION_NVP(_k2);
+  ar << BOOST_SERIALIZATION_NVP(_k3); // Omar
   ar << BOOST_SERIALIZATION_NVP(_p1);
   ar << BOOST_SERIALIZATION_NVP(_p2);
 }
@@ -199,6 +200,7 @@ void RadialTangentialDistortion::load(Archive & ar,
 
   ar >> BOOST_SERIALIZATION_NVP(_k1);
   ar >> BOOST_SERIALIZATION_NVP(_k2);
+  ar >> BOOST_SERIALIZATION_NVP(_k3); // Omar
   ar >> BOOST_SERIALIZATION_NVP(_p1);
   ar >> BOOST_SERIALIZATION_NVP(_p2);
 }
